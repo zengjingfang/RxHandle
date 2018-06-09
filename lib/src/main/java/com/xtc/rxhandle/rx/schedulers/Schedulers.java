@@ -17,8 +17,7 @@ public class Schedulers {
 
 
     public static Scheduler io() {
-        return IOScheduler.IO_SCHEDULER;
-
+        return IOScheduler.getIOScheduler();
     }
 
 

@@ -11,7 +11,7 @@ import com.xtc.rxhandle.rx.Scheduler;
 
 public class MainScheduler extends Scheduler {
 
-    public static final Scheduler MAIN_SCHEDULER = new IOScheduler();
+    public static  Scheduler MAIN_SCHEDULER ;
 
     public static Scheduler getMainScheduler() {
         return MAIN_SCHEDULER;

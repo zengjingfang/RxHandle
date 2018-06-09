@@ -15,6 +15,9 @@ import com.xtc.rxhandle.rx.functions.Action0;
 public class OperatorSubscribeOn<T> implements Observable.OnSubscribe<T> {
 
     final Scheduler scheduler;
+    /**
+     * Observable 源
+     */
     final Observable<T> source;
 
     public OperatorSubscribeOn(Observable<T> source, Scheduler scheduler) {
@@ -25,6 +28,10 @@ public class OperatorSubscribeOn<T> implements Observable.OnSubscribe<T> {
 
     @Override
     public void call(final Subscriber<? super T> subscriber) {
+        /*外边来的subscriber
+          通过下面的转换，构建出一个新的 Subscriber
+         */
+
         final Scheduler.Worker inner = scheduler.createWorker();
         subscriber.add(inner);
 
@@ -77,6 +84,7 @@ public class OperatorSubscribeOn<T> implements Observable.OnSubscribe<T> {
                     }
                 };
 
+                // 源Observable 订阅了 新构建的 Subscriber
                 source.unsafeSubscribe(s);
             }
         });
