@@ -19,18 +19,18 @@ import java.util.concurrent.TimeUnit;
 
 public class IOScheduler extends Scheduler {
 
-    public static  Scheduler IO_SCHEDULER ;
+    private static  Scheduler sScheduler;
     private static Handler ioHandler = null;
 
     public static Scheduler getIOScheduler() {
         synchronized (IOScheduler.class) {
-            if (IO_SCHEDULER == null) {
+            if (sScheduler == null) {
                 synchronized (IOScheduler.class) {
-                    IO_SCHEDULER = new IOScheduler();
+                    sScheduler = new IOScheduler();
                 }
             }
         }
-        return IO_SCHEDULER;
+        return sScheduler;
     }
 
     private IOScheduler() {

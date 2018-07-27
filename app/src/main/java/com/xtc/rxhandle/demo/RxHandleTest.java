@@ -58,10 +58,10 @@ public class RxHandleTest {
         Scheduler ioScheduler = Schedulers.io();
         Observable<String> observer2 = observable1.subscribeOn(ioScheduler);
 //
-//        Scheduler mainScheduler = AndroidSchedulers.mainThread();
-//        Observable<String> observer3 = observer2.observeOn(mainScheduler);
+        Scheduler mainScheduler = Schedulers.io();
+        Observable<String> observer3 = observer2.observeOn(mainScheduler);
 //
-        observer2.subscribe(stringSubscriber);
+        observer3.subscribe(stringSubscriber);
 
 
     }

@@ -2,7 +2,11 @@ package com.xtc.rxhandle.rx;
 
 
 import com.xtc.rxhandle.rx.functions.Action1;
+import com.xtc.rxhandle.rx.functions.Func1;
+import com.xtc.rxhandle.rx.operators.OnSubscribeLift;
+import com.xtc.rxhandle.rx.operators.OperatorObserveOn;
 import com.xtc.rxhandle.rx.operators.OperatorSubscribeOn;
+import com.xtc.rxhandle.rx.util.RxRingBuffer;
 
 /**
  * RxHandle
@@ -73,6 +77,24 @@ public class Observable<T> {
         }
     }
 
+    public interface Operator<R, T> extends Func1<Subscriber<? super R>, Subscriber<? super T>> {
+        // cover for generics insanity
+    }
+
+
+    public final Observable<T> observeOn(Scheduler scheduler) {
+        return observeOn(scheduler, RxRingBuffer.SIZE);
+    }
+
+    public final Observable<T> observeOn(Scheduler scheduler, int bufferSize) {
+        return observeOn(scheduler, false, bufferSize);
+    }
+    public final Observable<T> observeOn(Scheduler scheduler, boolean delayError, int bufferSize) {
+        return lift(new OperatorObserveOn<T>(scheduler, delayError, bufferSize));
+    }
+    public final <R> Observable<R> lift(final Operator<? extends R, ? super T> operator) {
+        return create(new OnSubscribeLift<T, R>(onSubscribe, operator));
+    }
 }
 
 

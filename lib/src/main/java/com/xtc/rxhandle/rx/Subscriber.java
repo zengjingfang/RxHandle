@@ -81,4 +81,43 @@ public abstract class Subscriber<T> implements Observer<T>, Subscription {
             }
         }
     }
+
+
+
+    protected final void request(long n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("number requested cannot be negative: " + n);
+        }
+
+        // if producer is set then we will request from it
+        // otherwise we increase the requested count by n
+        Producer producerToRequestFrom;
+        synchronized (this) {
+            if (producer != null) {
+                producerToRequestFrom = producer;
+            } else {
+                addToRequested(n);
+                return;
+            }
+        }
+        // after releasing lock (we should not make requests holding a lock)
+        producerToRequestFrom.request(n);
+    }
+
+
+
+    private void addToRequested(long n) {
+        if (requested == NOT_SET) {
+            requested = n;
+        } else {
+            final long total = requested + n;
+            // check if overflow occurred
+            if (total < 0) {
+                requested = Long.MAX_VALUE;
+            } else {
+                requested = total;
+            }
+        }
+    }
+
 }

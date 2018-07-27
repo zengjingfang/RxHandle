@@ -20,5 +20,13 @@ public class Schedulers {
         return IOScheduler.getIOScheduler();
     }
 
+    /**
+     * 当前线程
+     */
+    public static Scheduler immediate() {
+        // TODO: 2018/6/23 判断当前looper
+        return IOScheduler.getIOScheduler();
+    }
+
 
 }
